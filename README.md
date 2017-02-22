@@ -2,27 +2,27 @@
 
 ## Setup
 
-1. Install [Python 3.6](https://www.python.org/downloads/)
+Install [Python 3.6](https://www.python.org/downloads/)
 
-2. It comes with a package manager, pip. Open a terminal and run 
+It comes with a package manager, pip. Open a terminal and run 
 ```
 $ sudo pip install virtualenv
 ```
 
-3. Create a folder for the project
+Create a folder for the project
 ```
 $ mkdir myproject
 $ cd myproject
 ```
 
-4. Run virtualenv setup
+Run virtualenv setup
 ```
 $ virtualenv venv
 New python executable in venv/bin/python
 Installing setuptools, pip............done.
 ```
 
-5. Clone the repository
+Clone the repository
 ```
 $ git clone https://github.com/knocktrends/knocksensor.git
 ```
