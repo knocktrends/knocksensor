@@ -1,0 +1,7 @@
+
+###### Knock Server requirements file
+###### Requirements without Version Specifiers ######
+flask
+sqlalchemy
+
+###### Requirements with Version Specifiers ######
