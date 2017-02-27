@@ -22,7 +22,7 @@ class AccessPattern(Base):
     maxUses = Column(BigInteger().with_variant(Integer, "sqlite"))
     name = Column(String)
     usedCount = Column(BigInteger().with_variant(Integer, "sqlite"))
-    children = relationship("patternpiece", backref="accesspattern")
+    patternPieces = relationship("patternpiece", backref="accesspattern")
 
 class PatternPiece(Base):
     __tablename__ = 'patternpiece'
