@@ -12,3 +12,6 @@ ENV/
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
+
+#Database & Server Files
+knock.db
