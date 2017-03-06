@@ -24,7 +24,7 @@ def patterns_post():
     # Fields from form
     try:
         pattern.name = data['name']
-    except KeyError, e:
+    except KeyError as e:
         return Response('Name is required', 400)
 
     if 'expiration' in data:
