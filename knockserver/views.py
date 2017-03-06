@@ -75,7 +75,7 @@ def knock():
             piece = PatternPiece()
             piece.length = data['pattern'][i]
             piece.order = i
-            #TODO Don't remember if first is pressed
+            # First int is pressed time so all even indexed values are pressed
             piece.pressed = True if (i % 2 == 0) else False 
 
             pending_pattern.patternPieces.append(piece)
