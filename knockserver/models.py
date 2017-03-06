@@ -20,6 +20,17 @@ class AccessPattern(Base):
     pending = Column(Boolean)
     patternPieces = relationship("PatternPiece", backref="accesspattern")
 
+    @property
+    def serialize(self):
+        """Return an easily serialized version of the object."""
+        return {
+            "id": self.id,
+            "active": self.active,
+            "name": self.name,
+            "pending": self.pending
+        }
+
+
 class PatternPiece(Base):
     __tablename__ = 'patternpiece'
     id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)

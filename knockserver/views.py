@@ -54,7 +54,10 @@ def patterns_get():
     Return all patterns for debugging
     Patterns ordered newest first
     """
-    return str(AccessPattern.query.order_by(AccessPattern.id.desc().all()))
+    return jsonify(
+        [pattern.serialize for pattern in
+         AccessPattern.query.order_by(AccessPattern.id.desc()).all()]
+    )
 
 @app.route('/knock/', methods=['POST'])
 def knock():
