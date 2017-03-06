@@ -2,11 +2,6 @@ from sqlalchemy import Column, BigInteger, Integer, String, Float, Boolean, Fore
 from sqlalchemy.orm import relationship
 from knockserver.database import Base
 
-class ExampleObject(Base):
-    __tablename__ = 'example_object'
-    id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
-    example_string = Column(String)
-
 class User(Base):
     __tablename__ = 'user'
     id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
