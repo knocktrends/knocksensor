@@ -43,10 +43,10 @@ def patterns():
         db_session.add(pattern)
         db_session.commit()
 
-        return '{"Ok": true}' #TODO decide response
+        return '{"success": true}' #TODO decide response
         
     elif request.method == 'GET':
-        pass
+        return str(AccessPattern.query.all())
 
     return ''
 
@@ -60,7 +60,7 @@ def knock():
     data = request.get_json(force=True)# converts request body json into python dict
 
     # Check for pending knock
-    pending_pattern = AccessPatten.query.filter(AccessPattern.pending == True).first()
+    pending_pattern = AccessPattern.query.filter(AccessPattern.pending == True).first()
 
     if pending_pattern is not None:
         i = 0
@@ -71,12 +71,18 @@ def knock():
             #TODO Don't remember if first is pressed
             piece.pressed = True if (i % 2 == 0) else False 
 
-            pending_pattern.patternPieces.add(piece)
+            pending_pattern.patternPieces.append(piece)
             i += 1
+
+        # Don't keep adding knocks to this pattern
+        pending_pattern.pending = False
 
         db_session.add(pending_pattern)
         db_session.commit()
 
+        print(pending_pattern.id)
+        return '{"success": true}'
+
     else: # TODO Pattern matching
-        pass
+        return ''
 
