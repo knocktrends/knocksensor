@@ -12,43 +12,49 @@ from knockserver.models import AccessPattern, PatternPiece
 def index():
     return render_template('index.html')
 
-@app.route('/patterns/', methods=['GET', 'POST'])
-def patterns():
+@app.route('/patterns/', methods=['POST'])
+def patterns_post():
     """
     Handles the creation of new knock patterns for a user.
     """
-    if request.method == 'POST':
-        data = request.get_json(force=True)# converts request body json into python dict
+    data = request.get_json(force=True)# converts request body json into python dict
 
-        pattern = AccessPattern()
-        
-        # Fields from form
+    pattern = AccessPattern()
+    
+    # Fields from form
+    try:
         pattern.name = data['name']
+    except KeyError, e:
+        return Response('Name is required', 400)
 
-        if 'expiration' in data:
-            pattern.expiration = data['expiration']
-        else:
-            pattern.expiration = 0
+    if 'expiration' in data:
+        pattern.expiration = data['expiration']
+    else:
+        pattern.expiration = 0
 
-        if 'maxUses' in data:
-            pattern.maxUses = data['maxUses']
-        else:
-            pattern.maxUses = -1
+    if 'maxUses' in data:
+        pattern.maxUses = data['maxUses']
+    else:
+        pattern.maxUses = -1
 
-        # Fields that always are initialized to the same value
-        pattern.active = True
-        pattern.usedCount = 0
-        pattern.pending = True
+    # Fields that always are initialized to the same value
+    pattern.active = True
+    pattern.usedCount = 0
+    pattern.pending = True
 
-        db_session.add(pattern)
-        db_session.commit()
+    db_session.add(pattern)
+    db_session.commit()
 
-        return '{"success": true}' #TODO decide response
-        
-    elif request.method == 'GET':
-        return str(AccessPattern.query.all())
+    return '{"success": true}' #TODO decide response
 
-    return ''
+
+@app.route('/patterns/', methods = ['GET'])
+def patterns_get():
+    """
+    Return all patterns for debugging
+    Patterns ordered newest first
+    """
+    return str(AccessPattern.query.order_by(AccessPattern.id.desc().all()))
 
 @app.route('/knock/', methods=['POST'])
 def knock():
@@ -64,6 +70,7 @@ def knock():
 
     if pending_pattern is not None:
         i = 0
+        # Convert int values from json array and store them as PatternPieces
         for json_val in data['pattern']:
             piece = PatternPiece()
             piece.length = data['pattern'][i]
