@@ -10,3 +10,7 @@ function send_status() {
         }
     })
 }
+
+$(function () {
+    $('#datetimepicker1').datetimepicker();
+});
