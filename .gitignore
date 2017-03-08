@@ -12,3 +12,7 @@ ENV/
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
+
+# Bower
+bower_components
+bower_components/
