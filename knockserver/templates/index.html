@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Hello World</title>
+<title>KnockTrends</title>
   <script type="text/javascript" src="../static/bower_components/jquery/dist/jquery.min.js"></script>
   <script type="text/javascript" src="../static/bower_components/moment/min/moment.min.js"></script>
   <script type="text/javascript" src="../static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -15,18 +15,26 @@
 <body>
  
   <div class="container">
-    <div class="row">
-      <div class='col-sm-3'>
-        <p>Choose an experation date:</p>
-      </div>
-      <div class='col-sm-6'>
-        <div class="form-group">
+    <div class="form-group">
+      <div class="row">
+        <div class='col-sm-4'>
           <div class='input-group date' id='datetimepicker'>
-            <input type='text' class="form-control" />
+            <input type='text' class="form-control" placeholder="Choose an experation date"/>
             <span class="input-group-addon">
               <span class="glyphicon glyphicon-calendar"></span>
             </span>
           </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class='col-sm-6'>
+          <div class="input-group">
+            <input type='text' class="form-control" id="uses" placeholder="Number of times this pattern can be used"/>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class='col-sm-4'>
           <div class="button_box">
             <button class="btn btn-primary" onclick="send_status()">Record Knock Pattern</button>
           </div>
