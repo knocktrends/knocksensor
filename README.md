@@ -41,7 +41,7 @@ Windows
 $ venv\Scripts\activate
 ```
 
-To exit, use
+When you are done coding, to exit, use
 ```
 $ deactivate
 ```
@@ -51,6 +51,13 @@ After entering a virtual environment with the activate command, check for any de
 
 ```
 $ pip install -r requirements.txt
+```
+
+Initialize the database. This must be done any time the schema of a model changes. (rm the old db first)
+```
+$ python
+>>> from knockserver.database import init_db
+>>> init_db()
 ```
 
 Then to run use

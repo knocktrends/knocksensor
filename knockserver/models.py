@@ -17,7 +17,19 @@ class AccessPattern(Base):
     maxUses = Column(BigInteger().with_variant(Integer, "sqlite"))
     name = Column(String)
     usedCount = Column(BigInteger().with_variant(Integer, "sqlite"))
-    patternPieces = relationship("patternpiece", backref="accesspattern")
+    pending = Column(Boolean)
+    patternPieces = relationship("PatternPiece", backref="accesspattern")
+
+    @property
+    def serialize(self):
+        """Return an easily serialized version of the object."""
+        return {
+            "id": self.id,
+            "active": self.active,
+            "name": self.name,
+            "pending": self.pending
+        }
+
 
 class PatternPiece(Base):
     __tablename__ = 'patternpiece'
