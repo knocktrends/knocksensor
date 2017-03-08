@@ -5,16 +5,15 @@ function send_status() {
 
     var dateUnixTime = $('#datetimepicker').data("DateTimePicker").date().unix();
     var uses = $("#uses").val();
-    console.log(dateUnixTime)
-    console.log(uses);
+    console.log(dateUnixTime);
 
-    // $.post({
-    //     url: "",
-    //     data : { is_recording: !recording, time: dateUnixTime},
-    //     success : function(json) {
-    //         console.log(data.is_recording);
-    //     }
-    // });
+    $.post({
+        url: "http://127.0.0.1:5000/patterns/",
+        data : { name: "Test", expiration: dateUnixTime, maxUses: uses},
+        success : function(json) {
+            console.log(json);
+        }
+    });
 
     recording = true;
 }
