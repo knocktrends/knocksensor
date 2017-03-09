@@ -4,7 +4,7 @@
 
 Install [Python 3.6](https://www.python.org/downloads/)
 
-It comes with a package manager, pip. Open a terminal and run 
+It comes with a package manager, pip. Open a terminal and run
 ```
 $ sudo pip install virtualenv
 ```
@@ -71,3 +71,22 @@ $ python run.py
 ```
 
 Enter the [URL](http://127.0.0.1:5000/) into your web browser and the index page should load
+
+
+## Install Front End Bower Components
+Download node package manager (npm)
+
+Run
+```
+npm install -g bower
+```
+
+Navigate to
+```
+knocksensor/knockserver/static/
+```
+
+Run
+```
+bower install
+```

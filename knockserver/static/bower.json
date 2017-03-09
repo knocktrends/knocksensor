@@ -1,0 +1,21 @@
+{
+  "name": "static",
+  "homepage": "https://github.com/knocktrends/knocksensor",
+  "authors": [
+    "Matthew Crawford <mcrawford0126@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "eonasdan-bootstrap-datetimepicker": "^4.17.47",
+    "bootstrap": "^3.3.7"
+  }
+}

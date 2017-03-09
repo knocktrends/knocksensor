@@ -13,5 +13,10 @@ ENV/
 pip-log.txt
 pip-delete-this-directory.txt
 
+# Bower
+bower_components
+bower_components/
+
 #Database & Server Files
 knock.db
+
