@@ -59,6 +59,7 @@ def patterns_get():
          AccessPattern.query.order_by(AccessPattern.id.desc()).all()]
     )
 
+
 @app.route('/knock/', methods=['POST'])
 def knock():
     """
@@ -95,4 +96,7 @@ def knock():
 
     else: # TODO Pattern matching
         return ''
-
+        # pattern_to_match = AccessPattern.query.first()
+        # for json_val in data['pattern']:
+        #     for piece in pattern_to_match.patternPieces:
+        #         # TODO: This
