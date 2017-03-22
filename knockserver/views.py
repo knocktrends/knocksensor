@@ -95,8 +95,42 @@ def knock():
         return '{"success": true}'
 
     else: # TODO Pattern matching
-        return ''
-        # pattern_to_match = AccessPattern.query.first()
-        # for json_val in data['pattern']:
-        #     for piece in pattern_to_match.patternPieces:
-        #         # TODO: This
+        new_pattern = AccessPattern()
+
+        for i, piece_length in enumerate(data['pattern']):
+            piece = PatternPiece()
+            piece.length = piece_length
+            piece.order = i
+            # First int is pressed time so all even indexed values are pressed
+            piece.pressed = i % 2 == 0  # Assigns pressed to true or false.
+            new_pattern.patternPieces.append(piece)
+
+        match_patterns = AccessPattern.query.all()
+        for pattern in match_patterns:
+            # Check to make sure number of pieces match
+            if (len(new_pattern.patternPieces) != len(pattern.patternPieces)) or (len(pattern.patternPieces) <= 0):
+                continue
+            # We know that new_pattern is already ordered because we just created it.
+            # but we don't know if pattern is so order it here before compairing.
+            ordered_pattern_pieces = sorted(pattern.patternPieces, key=lambda p: p.order)
+
+            piece_failed = False
+            for new_pattern_piece, stored_pattern_piece in zip(new_pattern.patternPieces, ordered_pattern_pieces):
+                # TODO: make sure that buffer is defined.
+                buffer = 200
+                if not abs(new_pattern_piece - stored_pattern_piece) <= buffer:
+                    # TODO: properly jsonify things in this return.
+                    piece_failed = True
+                    break
+            
+            if piece_failed:
+                # Move onto checking the next pattern.
+                continue
+            else:
+                # Correct pattern detected!!! :D
+                # Unlock the door
+
+                # TODO: UPDATE USED COUNT
+                return '{"success": true}'
+            
+        return '{"success": false}'
