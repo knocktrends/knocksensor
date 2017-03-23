@@ -39,7 +39,7 @@ def patterns_post():
 
     # Fields that always are initialized to the same value
     pattern.active = True
-    pattern.usedCount = 0
+    pattern.used_count = 0
     pattern.pending = True
 
     db_session.add(pattern)
