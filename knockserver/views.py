@@ -32,10 +32,10 @@ def patterns_post():
     else:
         pattern.expiration = 0
 
-    if 'maxUses' in data:
-        pattern.maxUses = data['maxUses']
+    if 'max_uses' in data:
+        pattern.max_uses = data['max_uses']
     else:
-        pattern.maxUses = -1
+        pattern.max_uses = -1
 
     # Fields that always are initialized to the same value
     pattern.active = True
@@ -73,7 +73,7 @@ def knock():
 
     if pending_pattern is not None:
         i = 0
-        # Convert int values from json array and store them as PatternPieces
+        # Convert int values from json array and store them as pattern_pieces
         for json_val in data['pattern']:
             piece = PatternPiece()
             piece.length = data['pattern'][i]
@@ -81,7 +81,7 @@ def knock():
             # First int is pressed time so all even indexed values are pressed
             piece.pressed = i % 2 == 0 
 
-            pending_pattern.patternPieces.append(piece)
+            pending_pattern.pattern_pieces.append(piece)
             i += 1
 
         # Don't keep adding knocks to this pattern
