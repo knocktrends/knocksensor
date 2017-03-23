@@ -6,9 +6,9 @@ class User(Base):
     __tablename__ = 'user'
     id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
     hashed_pass = Column(String)
+    ifttt_secret = Column(String)
     salt = Column(String)
     username = Column(String)
-    ifttt_secret = Column(String)
 
 class AccessPattern(Base):
     __tablename__ = 'accesspattern'
@@ -17,9 +17,10 @@ class AccessPattern(Base):
     expiration = Column(BigInteger)
     max_uses = Column(BigInteger)
     name = Column(String)
+    pattern_pieces = relationship("patternpiece", backref="accesspattern")
     pending = Column(Boolean)
     used_count = Column(BigInteger)
-    pattern_pieces = relationship("patternpiece", backref="accesspattern")
+    user_id = Column(Integer, ForeignKey('user.id'))
 
     @property
     def serialize(self):
@@ -31,7 +32,6 @@ class AccessPattern(Base):
             "pending": self.pending
         }
 
-
 class PatternPiece(Base):
     __tablename__ = 'patternpiece'
     id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
@@ -39,3 +39,22 @@ class PatternPiece(Base):
     order = Column(BigInteger)
     pattern_id = Column(Integer, ForeignKey('accesspattern.id'))
     pressed = Column(Boolean)
+
+class NotifcationPreferences(Base):
+    __tablename__ = 'notifcationpreferences'
+    id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
+    expire_threshold = Column(BigInteger) # Notification sent if there is less time remaining than this threshold in minutes
+    failed_attempts_threshold = Column(BigInteger) # Notification sent if failures greater than this value
+    name = Column(String)
+    remaining_use_threshold = Column(BigInteger) # Notification sent if uses less than this value
+    send_no_earlier = Column(BigInteger) # Minutes from previous midnight (midnight = 0, 01:00 = 60)
+    send_no_later = Column(BigInteger) # Minutes from previous midnight (midnight = 0, 23:00 = 1380) and must be within one day
+    success_threshold = Column(BigInteger) # If used_count % this == 0 send notification
+
+
+class NotifcationJoin(Base):
+    __tablename__ = 'notificationjoin'
+    id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
+    pattern_id = Column(Integer, ForeignKey('accesspattern.id')) # Can be null (if null will be associated with all patterns for the user)
+    perference_id = Column(Integer, ForeignKey('notifcationpreferences.id'))
+    user_id = Column(Integer, ForeignKey('user.id'))
