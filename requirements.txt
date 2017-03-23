@@ -3,5 +3,6 @@
 ###### Requirements without Version Specifiers ######
 flask
 sqlalchemy
+requests
 
 ###### Requirements with Version Specifiers ######
