@@ -4,6 +4,8 @@ from flask import render_template
 from flask import jsonify
 from flask import json
 
+import requests
+
 from knockserver import app
 from knockserver.database import db_session
 from knockserver.models import AccessPattern, PatternPiece
@@ -20,7 +22,7 @@ def patterns_post():
     data = request.get_json(force=True)# converts request body json into python dict
 
     pattern = AccessPattern()
-    
+
     # Fields from form
     try:
         pattern.name = data['name']
@@ -79,7 +81,7 @@ def knock():
             piece.length = data['pattern'][i]
             piece.order = i
             # First int is pressed time so all even indexed values are pressed
-            piece.pressed = i % 2 == 0 
+            piece.pressed = i % 2 == 0
 
             pending_pattern.patternPieces.append(piece)
             i += 1
@@ -93,6 +95,23 @@ def knock():
         print(pending_pattern.id)
         return '{"success": true}'
 
-    else: # TODO Pattern matching
-        return ''
+    else:
+        #TODO
+        return '';
 
+
+def pattern_success(access_pattern, user):
+    send_unlock(access_pattern, user)
+    send_success_notification(access_pattern, user)
+
+def pattern_failure(access_pattern, user):
+    send_failure_notificatoin(access_pattern, user)
+
+def send_unlock(access_pattern, user):
+    r = requests.get('https://maker.ifttt.com/trigger/{access_pattern.name}/with/key/{user.ifttt_secret}')
+
+def send_success_notification(access_pattern, user):
+    r = requests.get('https://maker.ifttt.com/trigger/{access_pattern.name}/with/key/{user.ifttt_secret}')
+
+def send_failure_notificatoin(access_pattern, user):
+    r = requests.get('https://maker.ifttt.com/trigger/{access_pattern.name}/with/key/{user.ifttt_secret}')
