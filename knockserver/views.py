@@ -96,18 +96,19 @@ def knock():
         if 'pattern' not in data:
             return jsonify(success=False)
 
+        # Grab the current pattern pieces
         received_pattern_pieces = data['pattern']
 
         match_patterns = AccessPattern.query.all()
         for pattern in match_patterns:
 
             # Check to make sure number of pieces match
-            if (len(received_pattern_pieces) != len(pattern.patternPieces)) or (len(pattern.patternPieces) <= 0):
+            if (len(received_pattern_pieces) != len(pattern.pattern_pieces)) or (len(pattern.pattern_pieces) <= 0):
                 continue
 
             # We know that new_pattern is already ordered because we just created it.
             # but we don't know if pattern is so order it here before comparing.
-            ordered_pattern_pieces = sorted(pattern.patternPieces, key=lambda p: p.order)
+            ordered_pattern_pieces = sorted(pattern.pattern_pieces, key=lambda p: p.order)
 
             piece_failed = False
             for received_pattern_piece, stored_pattern_piece in zip(received_pattern_pieces, ordered_pattern_pieces):
@@ -119,10 +120,11 @@ def knock():
                 # Move onto checking the next pattern.
                 continue
             else:
+
                 # Correct pattern detected!!! :D
                 # Unlock the door
-
-                # TODO: UPDATE USED COUNT
+                pattern.used_count += 1
+                db_session.commit()
                 return jsonify(success=True)
 
         return jsonify(success=False)
