@@ -99,21 +99,27 @@ def knock():
         if pattern is not None:
             pattern_success(pattern)
         else:
-            send_failure_notification()
+            send_failure_notification(device_identifier)
 
 
 def pattern_success(access_pattern):
     send_unlock(access_pattern)
     send_success_notification(access_pattern)
 
-def pattern_failure(access_pattern, user):
-    send_failure_notificatoin(access_pattern, user)
+def pattern_failure(access_pattern):
+    send_failure_notification()
 
-def send_unlock(access_pattern, user):
+def send_unlock(access_pattern):
     r = requests.get('https://maker.ifttt.com/trigger/{access_pattern.name}/with/key/{user.ifttt_secret}')
 
-def send_success_notification(access_pattern, user):
+def send_success_notification(access_pattern):
     r = requests.get('https://maker.ifttt.com/trigger/{access_pattern.name}/with/key/{user.ifttt_secret}')
 
-def send_failure_notification(access_pattern, user):
+def send_failure_notification(device_identifier):
+    device = Device.query.filter(Device.identifier == device_identifier).first()
+    params = {}
+    params['failure_count'] = device.failure_count
+    for user in DeviceJoin.query.filter(DeviceJoin.device_id == device.id).all():
+        NotificationPreferences.query.filter(NotificationPreference.user_id ==
+    notfication_preferences = NotificationPreferences.query.filter(NotificationPreference.user_id == DeviceJoin.query.filter(DeviceJoin.device_id == device.id).user_id)
     r = requests.get('https://maker.ifttt.com/trigger/{access_pattern.name}/with/key/{user.ifttt_secret}')
