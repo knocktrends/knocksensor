@@ -96,13 +96,15 @@ def knock():
         return '{"success": true}'
 
     else:
-        #TODO
-        return '';
+        if pattern is not None:
+            pattern_success(pattern)
+        else:
+            send_failure_notification()
 
 
-def pattern_success(access_pattern, user):
-    send_unlock(access_pattern, user)
-    send_success_notification(access_pattern, user)
+def pattern_success(access_pattern):
+    send_unlock(access_pattern)
+    send_success_notification(access_pattern)
 
 def pattern_failure(access_pattern, user):
     send_failure_notificatoin(access_pattern, user)
@@ -113,5 +115,5 @@ def send_unlock(access_pattern, user):
 def send_success_notification(access_pattern, user):
     r = requests.get('https://maker.ifttt.com/trigger/{access_pattern.name}/with/key/{user.ifttt_secret}')
 
-def send_failure_notificatoin(access_pattern, user):
+def send_failure_notification(access_pattern, user):
     r = requests.get('https://maker.ifttt.com/trigger/{access_pattern.name}/with/key/{user.ifttt_secret}')
