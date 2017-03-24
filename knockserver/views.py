@@ -31,14 +31,14 @@ def patterns_post():
     else:
         pattern.expiration = 0
 
-    if 'maxUses' in data:
-        pattern.maxUses = data['maxUses']
+    if 'max_uses' in data:
+        pattern.max_uses = data['max_uses']
     else:
-        pattern.maxUses = -1
+        pattern.max_uses = -1
 
     # Fields that always are initialized to the same value
     pattern.active = True
-    pattern.usedCount = 0
+    pattern.used_count = 0
     pattern.pending = True
 
     db_session.add(pattern)
@@ -73,7 +73,7 @@ def knock():
 
     if pending_pattern is not None:
 
-        # Convert int values from json array and store them as PatternPieces
+        # Convert int values from json array and store them as pattern_pieces
         for i, json_val in enumerate(data['pattern']):
             piece = PatternPiece()
             piece.length = data['pattern'][i]
@@ -81,7 +81,7 @@ def knock():
             # First int is pressed time so all even indexed values are pressed
             piece.pressed = i % 2 == 0 
 
-            pending_pattern.patternPieces.append(piece)
+            pending_pattern.pattern_pieces.append(piece)
 
         # Don't keep adding knocks to this pattern
         pending_pattern.pending = False
@@ -114,7 +114,7 @@ def knock():
                 if not abs(received_pattern_piece - stored_pattern_piece.length) <= RECOGNITION_TOLERANCE:
                     piece_failed = True
                     break
-            
+
             if piece_failed:
                 # Move onto checking the next pattern.
                 continue
@@ -124,5 +124,5 @@ def knock():
 
                 # TODO: UPDATE USED COUNT
                 return jsonify(success=True)
-            
+
         return jsonify(success=False)
