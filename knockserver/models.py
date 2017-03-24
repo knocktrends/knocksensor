@@ -58,13 +58,13 @@ class NotifcationJoin(Base):
     perference_id = Column(Integer, ForeignKey('notifcationpreferences.id'))
     user_id = Column(Integer, ForeignKey('user.id'))
 
-class Device(base):
+class Device(Base):
     __tablename__ = 'device'
     id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
     identifier = Column(String)
     failure_count = Column(BigInteger)
 
-class DeviceJoin(base):
+class DeviceJoin(Base):
     __tablename__ = 'devicejoin'
     id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'))
