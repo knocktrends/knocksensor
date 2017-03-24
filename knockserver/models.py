@@ -20,7 +20,6 @@ class AccessPattern(Base):
     pattern_pieces = relationship("patternpiece", backref="accesspattern")
     pending = Column(Boolean)
     used_count = Column(BigInteger)
-    user_id = Column(Integer, ForeignKey('user.id'))
 
     @property
     def serialize(self):
@@ -58,3 +57,15 @@ class NotifcationJoin(Base):
     pattern_id = Column(Integer, ForeignKey('accesspattern.id')) # Can be null (if null will be associated with all patterns for the user)
     perference_id = Column(Integer, ForeignKey('notifcationpreferences.id'))
     user_id = Column(Integer, ForeignKey('user.id'))
+
+class Device(base):
+    __tablename__ = 'device'
+    id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
+    identifier = Column(String)
+
+class DeviceJoin(base):
+    __tablename__ = 'devicejoin'
+    id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    pattern_id = Column(Integer, ForeignKey('accesspattern.id')) # Can be null (if null will be associated with all patterns for the user)
+    device_id = Column(Integer, ForeignKey('device.id')) # Can be null (if null will be associated with all patterns for the user)
