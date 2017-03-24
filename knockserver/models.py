@@ -62,6 +62,7 @@ class Device(base):
     __tablename__ = 'device'
     id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
     identifier = Column(String)
+    failure_count = Column(BigInteger)
 
 class DeviceJoin(base):
     __tablename__ = 'devicejoin'
