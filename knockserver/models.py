@@ -61,12 +61,13 @@ class NotifcationJoin(Base):
 class Device(Base):
     __tablename__ = 'device'
     id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
-    identifier = Column(String)
     failure_count = Column(BigInteger)
+    identifier = Column(String)
+    name = Column(String)
 
 class DeviceJoin(Base):
     __tablename__ = 'devicejoin'
     id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
-    user_id = Column(Integer, ForeignKey('user.id'))
-    pattern_id = Column(Integer, ForeignKey('accesspattern.id')) # Can be null (if null will be associated with all patterns for the user)
     device_id = Column(Integer, ForeignKey('device.id')) # Can be null (if null will be associated with all patterns for the user)
+    pattern_id = Column(Integer, ForeignKey('accesspattern.id')) # Can be null (if null will be associated with all patterns for the user)
+    user_id = Column(Integer, ForeignKey('user.id'))
