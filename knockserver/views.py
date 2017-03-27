@@ -92,7 +92,7 @@ def knock():
         print(pending_pattern.id)
         return '{"success": true}'
 
-    else:  # TODO Pattern matching
+    else:
         if 'pattern' not in data:
             return jsonify(success=False)
 

@@ -17,7 +17,7 @@ class AccessPattern(Base):
     expiration = Column(BigInteger)
     max_uses = Column(BigInteger)
     name = Column(String)
-    pattern_pieces = relationship("patternpiece", backref="accesspattern")
+    pattern_pieces = relationship("PatternPiece", backref="accesspattern")
     pending = Column(Boolean)
     used_count = Column(BigInteger)
     user_id = Column(Integer, ForeignKey('user.id'))
