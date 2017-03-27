@@ -119,7 +119,10 @@ def send_failure_notification(device_identifier):
     device = Device.query.filter(Device.identifier == device_identifier).first()
     params = {}
     params['failure_count'] = device.failure_count
+    """
     for user in DeviceJoin.query.filter(DeviceJoin.device_id == device.id).all():
         NotificationPreferences.query.filter(NotificationPreference.user_id ==
     notfication_preferences = NotificationPreferences.query.filter(NotificationPreference.user_id == DeviceJoin.query.filter(DeviceJoin.device_id == device.id).user_id)
     r = requests.get('https://maker.ifttt.com/trigger/{access_pattern.name}/with/key/{user.ifttt_secret}')
+    """
+    return ''
