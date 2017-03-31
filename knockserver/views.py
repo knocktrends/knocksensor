@@ -102,29 +102,33 @@ def knock():
             send_failure_notification(device_identifier)
 
 
-def pattern_success(access_pattern):
-    send_unlock(access_pattern)
-    send_success_notification(access_pattern)
-
-def pattern_failure(access_pattern):
-    send_failure_notification()
+def pattern_success(access_pattern, device_identifier):
+    send_unlock(access_pattern, device_identifier)
+    send_success_notification(access_pattern, device_identifier)
 
 def send_unlock(access_pattern):
-    r = requests.get('https://maker.ifttt.com/trigger/{access_pattern.name}/with/key/{user.ifttt_secret}')
+    device = Device.query.filter(Device.identifier == device_identifier).first()
+    
+    for profile in ProfileJoin.query.filter(ProfileJoin.pattern_id == access_pattern.id).filter(ProfileJoin.device_id == device.id).all():
+        user in User.query.filter(User.id == profile.user_id).first():
+        requests.get('https://maker.ifttt.com/trigger/{access_pattern.name}/with/key/{user.ifttt_secret}')
 
 def send_success_notification(access_pattern):
-    r = requests.get('https://maker.ifttt.com/trigger/{access_pattern.name}/with/key/{user.ifttt_secret}')
+    device = Device.query.filter(Device.identifier == device_identifier).first()
+    params = {}
+
+    for profile in ProfileJoin.query.filter(ProfileJoin.device_id == device.id).all():
+        user = User.query.filter(User.id == profile.user_id).first()
+        for notification in NotificationPrefrences.query.filter(NotificationPreference.id == profile.id).all():
+            requests.get('https://maker.ifttt.com/trigger/{notification.name}/with/key/{user.ifttt_secret}')
 
 def send_failure_notification(device_identifier):
     device = Device.query.filter(Device.identifier == device_identifier).first()
     params = {}
     params['failure_count'] = device.failure_count
+
     for profile in ProfileJoin.query.filter(ProfileJoin.device_id == device.id).all():
         user = User.query.filter(User.id == profile.user_id).first()
         for notification in NotificationPrefrences.query.filter(NotificationPreference.id == profile.id).all():
             if(notification.failed_attempts_threshold >= 0 and device.failure_count % notification.failed_attempts_threshold == 0):
                 requests.get('https://maker.ifttt.com/trigger/{notification.failure_endpoint}/with/key/{user.ifttt_secret}')
-
-                                             
-    #notfication_preferences = NotificationPreferences.query.filter(NotificationPreference.user_id == DeviceJoin.query.filter(DeviceJoin.device_id == device.id).user_id)
-    #r = requests.get('https://maker.ifttt.com/trigger/{access_pattern.name}/with/key/{user.ifttt_secret}')
