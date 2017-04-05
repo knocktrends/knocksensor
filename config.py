@@ -1,1 +1,2 @@
 DATABASE_URI = 'sqlite:///knock.db'
+RECOGNITION_TOLERANCE = 200
