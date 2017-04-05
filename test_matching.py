@@ -3,6 +3,7 @@ from knockserver import database, app, models
 import unittest
 import tempfile
 import json
+import time
 
 from knockserver.database import db_session
 
@@ -30,7 +31,7 @@ class KnockServerTestCase(unittest.TestCase):
             follow_redirects=True
         )
 
-        data = json.loads(resp.data)
+        data = json.loads(resp.data.decode())
         self.assertEqual(data['success'], False)
 
     def test_perfect_match(self):
@@ -39,6 +40,9 @@ class KnockServerTestCase(unittest.TestCase):
         stored_pattern.name = "Test Pattern 1"
         stored_pattern.pending = False
         stored_pattern.used_count = 0
+
+        # Make this access pattern expire in the future by a significant amount of seconds
+        stored_pattern.expiration = time.time() + 10000
 
         for i in range(3):
             piece = models.PatternPiece()
@@ -59,7 +63,7 @@ class KnockServerTestCase(unittest.TestCase):
             follow_redirects=True
         )
 
-        data = json.loads(resp.data)
+        data = json.loads(resp.data.decode())
         self.assertEqual(data['success'], True)
 
     # - Can ignore an empty button press (THis should never happen but we should check for this)
