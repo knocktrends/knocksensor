@@ -4,6 +4,7 @@ from knockserver import app
 from knockserver.database import db_session
 from knockserver.models import AccessPattern, PatternPiece
 from config import RECOGNITION_TOLERANCE
+import time
 
 
 @app.route('/')
@@ -44,7 +45,7 @@ def patterns_post():
     db_session.add(pattern)
     db_session.commit()
 
-    return '{"success": true}'  # TODO: decide response
+    return jsonify(success=True)
 
 
 @app.route('/patterns/', methods = ['GET'])
@@ -66,7 +67,7 @@ def knock():
     If a knock is pending, this will set the pattern for the knock
     If no knocks are pending, this will attempt to match the pattern
     """
-    data = request.get_json(force=True)# converts request body json into python dict
+    data = request.get_json(force=True)  # Converts request body json into python dict
 
     # Check for pending knock
     pending_pattern = AccessPattern.query.filter(AccessPattern.pending == True).first()
@@ -89,8 +90,7 @@ def knock():
         db_session.add(pending_pattern)
         db_session.commit()
 
-        print(pending_pattern.id)
-        return '{"success": true}'
+        return jsonify(success=True)
 
     else:
         if 'pattern' not in data:
@@ -99,7 +99,8 @@ def knock():
         # Grab the current pattern pieces
         received_pattern_pieces = data['pattern']
 
-        match_patterns = AccessPattern.query.all()
+        # Filter out all expired knocks
+        match_patterns = AccessPattern.query.filter(AccessPattern.expiration > time.time())
         for pattern in match_patterns:
 
             # Check to make sure number of pieces match

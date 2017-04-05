@@ -22,23 +22,20 @@ class KnockServerTestCase(unittest.TestCase):
         os.close(self.db_fd)
         os.unlink(app.config['DATABASE'])
 
-    def test_empty_db_no_match(self):
-        resp = self.app.post(
-            '/knock/',
-            data=json.dumps({"pattern": [123, 123, 123]}),
-            content_type='application/json',
-            follow_redirects=True
-        )
+    def test_no_knocks_in_db(self):
+        # This test will sometimes fail until we get a proper way to set up the testing framework
+        # Need to properly setup and teardown db
+        self.assertEqual(len(models.AccessPattern.query.all()), 0)
 
-        data = json.loads(resp.data)
-        self.assertEqual(data['success'], False)
-
-    def test_perfect_match(self):
+    def test_expired_knock_not_matched(self):
         stored_pattern = models.AccessPattern()
         stored_pattern.active = True
         stored_pattern.name = "Test Pattern 1"
         stored_pattern.pending = False
         stored_pattern.used_count = 0
+
+        # Set the pattern in the past
+        stored_pattern.expiration = 1491230220
 
         for i in range(3):
             piece = models.PatternPiece()
@@ -52,6 +49,7 @@ class KnockServerTestCase(unittest.TestCase):
         db_session.add(stored_pattern)
         db_session.commit()
 
+        # Add a pattern that should match, and try to match it
         resp = self.app.post(
             '/knock/',
             data=json.dumps({"pattern": [123, 123, 123]}),
@@ -59,12 +57,10 @@ class KnockServerTestCase(unittest.TestCase):
             follow_redirects=True
         )
 
-        data = json.loads(resp.data)
-        self.assertEqual(data['success'], True)
+        data = json.loads(resp.data.decode())
 
-    # - Can ignore an empty button press (THis should never happen but we should check for this)
-    # - Can detect if the length of two button press patterns are different.
-    # - Can detect if the length of two button press patterns are the same.
+        # The pattern should not be in the database
+        self.assertEqual(data['success'], False)
 
 
 if __name__ == '__main__':
