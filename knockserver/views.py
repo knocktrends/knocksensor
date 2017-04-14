@@ -171,7 +171,7 @@ def in_dnd_mode(notification):
     utc_seconds_today = time.time() % 86400
     edt_seconds_today = utc_seconds_today - 14400
     minutes_today = edt_seconds_today/60
-    if((minutes_today < notification.send_no_earlier) || (minutes_today > notification.send_no_later)):
+    if((minutes_today < notification.send_no_earlier) or (minutes_today > notification.send_no_later)):
         return true
     else:
         return false
