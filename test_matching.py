@@ -10,16 +10,12 @@ from knockserver.database import db_session
 class KnockServerTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.db_fd, app.config['DATABASE'] = tempfile.mkstemp()
-        app.config['TESTING'] = True
         self.app = app.test_client()
-        with app.app_context():
-            database.init_db()
+        database.init_db()
 
     def tearDown(self):
         db_session.remove()
-        os.close(self.db_fd)
-        os.unlink(app.config['DATABASE'])
+        database.silent_remove_test_db()
 
     def test_empty_db_no_match(self):
         resp = self.app.post(
