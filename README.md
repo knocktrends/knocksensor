@@ -33,7 +33,7 @@ To do development or run the server, enter the environment using:
 
 OSX/Linux
 ```
-$ . venv/bin/activate
+$ source venv/bin/activate
 ```
 
 Windows
