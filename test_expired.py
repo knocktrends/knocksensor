@@ -16,8 +16,6 @@ class KnockServerTestCase(unittest.TestCase):
         database.silent_remove_test_db()
 
     def test_no_knocks_in_db(self):
-        # This test will sometimes fail until we get a proper way to set up the testing framework
-        # Need to properly setup and teardown db
         self.assertEqual(len(models.AccessPattern.query.all()), 0)
 
     def test_expired_knock_not_matched(self):
