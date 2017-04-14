@@ -1,7 +1,5 @@
-import os
 from knockserver import database, app, models
 import unittest
-import tempfile
 import json
 
 from knockserver.database import db_session
@@ -10,17 +8,12 @@ from knockserver.database import db_session
 class KnockServerTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.db_fd, app.config['DATABASE'] = tempfile.mkstemp()
-        app.config['TESTING'] = True
         self.app = app.test_client()
-        with app.app_context():
-            database.init_db()
+        database.init_db()
 
     def tearDown(self):
         db_session.remove()
-        # os.remove('knock.db')  # TODO: This makes the tests pass.  Workaround, remove when real solution available
-        os.close(self.db_fd)
-        os.unlink(app.config['DATABASE'])
+        database.silent_remove_test_db()
 
     def test_no_knocks_in_db(self):
         # This test will sometimes fail until we get a proper way to set up the testing framework

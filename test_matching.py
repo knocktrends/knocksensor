@@ -1,7 +1,5 @@
-import os
 from knockserver import database, app, models
 import unittest
-import tempfile
 import json
 import time
 
@@ -17,7 +15,6 @@ class KnockServerTestCase(unittest.TestCase):
     def tearDown(self):
         db_session.remove()
         database.silent_remove_test_db()
-
 
     def test_empty_db_no_match(self):
         resp = self.app.post(
