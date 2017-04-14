@@ -3,17 +3,18 @@ var recording = false;
 
 function send_status() {
 
-    var dateUnixTime = $('#datetimepicker').data("DateTimePicker").date().unix();
+    var expirationDate = $('#datetimepicker').data("DateTimePicker").date().unix().toString();
     var uses = $("#uses").val();
 
-    var date = dateUnixTime.toString();
+    var doNotDisturbStart = $('#dnd_start').data("DateTimePicker").date().unix().toString();
+    var doNotDisturbEnd = $('#dnd_end').data("DateTimePicker").date().unix().toString();
 
     $.ajax({
         type: "POST",
         contentType: "application/json",
         dataType: 'json',
         url: "http://127.0.0.1:5000/patterns/",
-        data : JSON.stringify({name: "Test", expiration: date, maxUses: uses})
+        data : JSON.stringify({name: "Test", expiration: expirationDate, maxUses: uses})
     });
 
     recording = true;
@@ -21,4 +22,6 @@ function send_status() {
 
 $(function () {
     $('#datetimepicker').datetimepicker();
+    $('#dnd_start').datetimepicker();
+    $('#dnd_end').datetimepicker();
 });
