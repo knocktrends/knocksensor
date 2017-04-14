@@ -14,8 +14,8 @@ def send_unlock(access_pattern):
     device = Device.query.filter(Device.identifier == device_identifier).first()
     
     for profile in ProfileJoin.query.filter(ProfileJoin.pattern_id == access_pattern.id).filter(ProfileJoin.device_id == device.id).all():
-        user in User.query.filter(User.id == profile.user_id).first():
-        requests.get('https://maker.ifttt.com/trigger/{access_pattern.name}/with/key/{user.ifttt_secret}')
+        for user in User.query.filter(User.id == profile.user_id).first():
+            requests.get('https://maker.ifttt.com/trigger/{access_pattern.name}/with/key/{user.ifttt_secret}')
 
 def send_success_notification(access_pattern):
     device = Device.query.filter(Device.identifier == device_identifier).first()

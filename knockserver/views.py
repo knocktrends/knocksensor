@@ -3,7 +3,7 @@ from flask import Flask, request, Response, render_template, jsonify, json
 import requests
 
 from knockserver import app
-from notifications import *
+from knockserver.notifications import *
 from knockserver.database import db_session
 from knockserver.models import AccessPattern, PatternPiece
 from config import RECOGNITION_TOLERANCE
