@@ -33,7 +33,7 @@ To do development or run the server, enter the environment using:
 
 OSX/Linux
 ```
-$ . venv/bin/activate
+$ source venv/bin/activate
 ```
 
 Windows
@@ -90,3 +90,11 @@ Run
 ```
 bower install
 ```
+
+## Unit Testing
+
+To properly unit test, follow these instructions:
+1. Change the ```TESTING``` variable to ```True``` in ```config.py```.
+2. Make sure you are in a virtual environment, see the directions in the Using Venv section of the README for more information.
+3. At the root level of the project, run the command ```python <test_file.py>```.  Replace ```<test_file.py>``` with the unit test file you wish to run.
+4. When done unit testing, change the ```TESTING``` variable back to ```False``` in ```config.py```.
