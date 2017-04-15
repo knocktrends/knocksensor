@@ -58,6 +58,7 @@ class ProfileJoin(Base):
     pattern_id = Column(Integer, ForeignKey('accesspattern.id')) # Can be null (if null will be associated with all patterns for the user)
     perference_id = Column(Integer, ForeignKey('notificationpreferences.id'))
     user_id = Column(Integer, ForeignKey('user.id'))
+    door_name = Column(String)
 
 class Device(Base):
     __tablename__ = 'device'

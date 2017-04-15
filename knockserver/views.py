@@ -129,7 +129,10 @@ def knock():
                 # Unlock the door
                 pattern.used_count += 1
                 db_session.commit()
+                pattern_success(pattern, "TestDevice1") #temp device id until implemented
                 return jsonify(success=True)
 
+
+        send_failure_notification("TestDevice1") #temp device id until implemented
         return jsonify(success=False)
 
