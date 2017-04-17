@@ -4,7 +4,7 @@ from flask import Flask, request, Response, render_template, jsonify, json
 from knockserver import app
 from knockserver.database import db_session
 from knockserver.models import AccessPattern, PatternPiece, Device, ProfileJoin, User, NotificationPreferences
-import requests
+import requests, time
 
 def send_query(endpoint, key):
     requests.get('https://maker.ifttt.com/trigger/' + endpoint + '/with/key/' + key)
@@ -47,10 +47,10 @@ def send_failure_notification(device_identifier):
 # Uses UTC time
 #
 def in_dnd_mode(notification):
-    utc_seconds_today = time.time() % 86400
+    utc_seconds_today = int(time.time()) % 86400
     minutes_today = utc_seconds_today/60
 
-    if((minutes_today < notification.send_no_earlier) or (minutes_today > notification.send_no_later)):
-        return true
+    if((notification.send_no_earlier and minutes_today < notification.send_no_earlier) or (notification.send_no_later and minutes_today > notification.send_no_later)):
+        return True
     else:
-        return false
+        return False
