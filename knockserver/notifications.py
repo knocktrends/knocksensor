@@ -29,12 +29,11 @@ def send_success_notification(access_pattern, device_identifier):
         user = User.query.filter(User.id == profile.user_id).first()
         
         for notification in NotificationPreferences.query.filter(NotificationPreferences.id == profile.id).all():
-            send_query(notification.name, user.ifttt_secret)
+            if (not in_dnd_mode(notification)):
+                send_query(notification.name, user.ifttt_secret)
 
 def send_failure_notification(device_identifier):
     device = Device.query.filter(Device.identifier == device_identifier).first()
-    params = {}
-    #params['failure_count'] = device.failure_count
 
     for profile in ProfileJoin.query.filter(ProfileJoin.device_id == 1).all():
         user = User.query.filter(User.id == profile.user_id).first()
@@ -45,13 +44,12 @@ def send_failure_notification(device_identifier):
                 send_query(notification.failure_endpoint, user.ifttt_secret)
 
 ##
-# Subtracts 5670 minutes (4 hours) to get
-# into eastern time-zone.
+# Uses UTC time
 #
 def in_dnd_mode(notification):
     utc_seconds_today = time.time() % 86400
-    edt_seconds_today = utc_seconds_today - 14400
-    minutes_today = edt_seconds_today/60
+    minutes_today = utc_seconds_today/60
+
     if((minutes_today < notification.send_no_earlier) or (minutes_today > notification.send_no_later)):
         return true
     else:

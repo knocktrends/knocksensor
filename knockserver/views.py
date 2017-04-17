@@ -1,7 +1,5 @@
 from flask import Flask, request, Response, render_template, jsonify, json
 
-import requests
-
 from knockserver import app
 from knockserver.notifications import *
 from knockserver.database import db_session
