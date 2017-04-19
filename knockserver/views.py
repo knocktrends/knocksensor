@@ -13,6 +13,58 @@ def index():
     return render_template('index.html')
 
 
+@app.route("/api/onboarding/", methods=["POST"])
+def on_board_user():
+    """Onboard a user.
+    
+    Payload: A form containing
+    {
+        "username": "TestUser",
+        "device_id": "00:00:00:00:00"
+        "expire_threshold": 123,
+        "failed_attempts_threshold": 2,
+        "remaining_use_threshold": 2,
+        "send_no_earlier": 123,
+        "send_no_later": 555,
+        "success_threshold": 1,
+        "name": "ifttt_success",
+        "failure_endpoint": "ifttt_failure",
+        "ifttt_secret": "asdf"
+    }
+    """
+
+    user = User()
+    user.username = request.form["username"]
+    user.ifttt_secret = request.form["ifttt_secret"]
+
+    device = Device()
+    device.identifier = request.form["device_id"]
+    device.failure_count = 0
+
+    preferences = NotificationPreferences()
+    preferences.expire_threshold = request.form["expire_threshold"]
+    preferences.failed_attempts_threshold = request.form["failed_attempts_threshold"]
+    preferences.remaining_use_threshold = request.form["remaining_use_threshold"]
+    preferences.send_no_earlier = request.form["send_no_earlier"]
+    preferences.send_no_later = request.form["send_no_later"]
+    preferences.success_threshold = request.form["success_threshold"]
+    preferences.name = request.form["name"]
+    preferences.failure_endpoint = request.form["failure_endpoint"]
+
+    db_session.add(user)
+    db_session.add(device)
+    db_session.add(preferences)
+    db_session.commit()
+
+    profile_join = ProfileJoin()
+    profile_join.device_id = device.id
+    profile_join.user_id = user.id
+    profile_join.preference_id = preferences.id
+    profile_join.door_name = "Door 1"
+
+    db_session.add(profile_join)
+    db_session.commit()
+
 @app.route('/patterns/', methods=['POST'])
 def patterns_post():
     """
