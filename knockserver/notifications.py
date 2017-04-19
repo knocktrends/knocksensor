@@ -28,7 +28,7 @@ def send_success_notification(access_pattern, device_identifier):
     for profile in ProfileJoin.query.filter(ProfileJoin.device_id == 1).all():
         user = User.query.filter(User.id == profile.user_id).first()
         
-        for notification in NotificationPreferences.query.filter(NotificationPreferences.id == profile.id).all():
+        for notification in NotificationPreferences.query.filter(NotificationPreferences.id == profile.preference_id).all():
             if (not in_dnd_mode(notification)):
                 send_query(notification.name, user.ifttt_secret)
 
@@ -38,7 +38,7 @@ def send_failure_notification(device_identifier):
     for profile in ProfileJoin.query.filter(ProfileJoin.device_id == 1).all():
         user = User.query.filter(User.id == profile.user_id).first()
         
-        for notification in NotificationPreferences.query.filter(NotificationPreferences.id == profile.id).all():
+        for notification in NotificationPreferences.query.filter(NotificationPreferences.id == profile.preference_id).all():
             
             if(notification.failed_attempts_threshold >= 0 and device.failure_count % notification.failed_attempts_threshold == 0):
                 send_query(notification.failure_endpoint, user.ifttt_secret)
