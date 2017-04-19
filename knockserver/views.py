@@ -1,6 +1,7 @@
-from flask import Flask, request, Response, render_template, jsonify, json
+from flask import Flask, request, Response, render_template, jsonify, json, flash
 
 from knockserver import app
+from .forms import UserProfileForm
 from knockserver.notifications import *
 from knockserver.database import db_session
 from knockserver.models import AccessPattern, PatternPiece
@@ -13,7 +14,7 @@ def index():
     return render_template('index.html')
 
 
-@app.route("/api/onboarding/", methods=["POST"])
+@app.route("/api/onboarding/", methods=["GET", "POST"])
 def on_board_user():
     """Onboard a user.
     
@@ -32,38 +33,49 @@ def on_board_user():
         "ifttt_secret": "asdf"
     }
     """
+    form = UserProfileForm(request.form)
 
-    user = User()
-    user.username = request.form["username"]
-    user.ifttt_secret = request.form["ifttt_secret"]
+    if request.method == "POST":
 
-    device = Device()
-    device.identifier = request.form["device_id"]
-    device.failure_count = 0
+        if form.validate():
 
-    preferences = NotificationPreferences()
-    preferences.expire_threshold = request.form["expire_threshold"]
-    preferences.failed_attempts_threshold = request.form["failed_attempts_threshold"]
-    preferences.remaining_use_threshold = request.form["remaining_use_threshold"]
-    preferences.send_no_earlier = request.form["send_no_earlier"]
-    preferences.send_no_later = request.form["send_no_later"]
-    preferences.success_threshold = request.form["success_threshold"]
-    preferences.name = request.form["name"]
-    preferences.failure_endpoint = request.form["failure_endpoint"]
+            user = User()
+            user.username = request.form["username"]
+            user.ifttt_secret = request.form["ifttt_secret"]
 
-    db_session.add(user)
-    db_session.add(device)
-    db_session.add(preferences)
-    db_session.commit()
+            device = Device()
+            device.identifier = request.form["device_id"]
+            device.failure_count = 0
 
-    profile_join = ProfileJoin()
-    profile_join.device_id = device.id
-    profile_join.user_id = user.id
-    profile_join.preference_id = preferences.id
-    profile_join.door_name = "Door 1"
+            preferences = NotificationPreferences()
+            preferences.expire_threshold = request.form["expire_threshold"]
+            preferences.failed_attempts_threshold = request.form["failed_attempts_threshold"]
+            preferences.remaining_use_threshold = request.form["remaining_use_threshold"]
+            preferences.send_no_earlier = request.form["send_no_earlier"]
+            preferences.send_no_later = request.form["send_no_later"]
+            preferences.success_threshold = request.form["success_threshold"]
+            preferences.name = request.form["name"]
+            preferences.failure_endpoint = request.form["failure_endpoint"]
 
-    db_session.add(profile_join)
-    db_session.commit()
+            db_session.add(user)
+            db_session.add(device)
+            db_session.add(preferences)
+            db_session.commit()
+
+            profile_join = ProfileJoin()
+            profile_join.device_id = device.id
+            profile_join.user_id = user.id
+            profile_join.preference_id = preferences.id
+            profile_join.door_name = "Door 1"
+
+            db_session.add(profile_join)
+            db_session.commit()
+            flash(user.username + ' successfully onboarded!', 'success')
+        else:
+            flash('Error: Not all fields were properly filled out', 'error')
+
+    return render_template('onboarding.html', form=form)
+
 
 @app.route('/patterns/', methods=['POST'])
 def patterns_post():

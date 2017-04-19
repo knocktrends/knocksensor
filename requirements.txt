@@ -4,5 +4,6 @@
 flask
 sqlalchemy
 requests
+wtforms
 
 ###### Requirements with Version Specifiers ######
