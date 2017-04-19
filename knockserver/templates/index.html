@@ -8,17 +8,17 @@
   <script type="text/javascript" src="../static/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
   <link rel="stylesheet" href="../static/bower_components/bootstrap/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="../static/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">    
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
 
 <body>
- <a href="/api/onboarding/">Create a User Profile</a>
   <div class="container">
+      <a href="{{ url_for('on_board_user') }}">Create a User Profile</a>
       <div class="row">
         <div class='col-sm-4'>
           <div class='input-group date' id='datetimepicker'>
-            <input type='text' class="form-control" placeholder="Choose an experation date"/>
+            <input type='text' class="form-control" placeholder="Choose an expiration date"/>
             <span class="input-group-addon">
               <span class="glyphicon glyphicon-calendar"></span>
             </span>

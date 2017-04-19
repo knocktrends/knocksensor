@@ -14,74 +14,50 @@ def index():
     return render_template('index.html')
 
 
-@app.route("/api/onboarding/", methods=["GET", "POST"])
+@app.route("/onboard/", methods=["GET", "POST"])
 def on_board_user():
-    """Onboard a user.
-    
-    Payload: A form containing
-    {
-        "username": "TestUser",
-        "device_id": "00:00:00:00:00"
-        "expire_threshold": 123,
-        "failed_attempts_threshold": 2,
-        "remaining_use_threshold": 2,
-        "send_no_earlier": 123,
-        "send_no_later": 555,
-        "success_threshold": 1,
-        "name": "ifttt_success",
-        "failure_endpoint": "ifttt_failure",
-        "ifttt_secret": "asdf"
-    }
-    """
-    form = UserProfileForm(request.form)
+    """Onboard a user."""
+    form = UserProfileForm()
+    if form.validate_on_submit():
+        user = User()
+        user.username = form.username.data
+        user.ifttt_secret = form.ifttt_secret.data
 
-    if request.method == "POST":
+        device = Device()
+        device.identifier = form.device_id.data
+        device.failure_count = 0
 
-        if form.validate():
+        preferences = NotificationPreferences()
+        preferences.expire_threshold = form.expire_threshold.data
+        preferences.failed_attempts_threshold = form.failed_attempts_threshold.data
+        preferences.remaining_use_threshold = form.remaining_use_threshold.data
+        preferences.send_no_earlier = form.send_no_earlier.data
+        preferences.send_no_later = form.send_no_later.data
+        preferences.success_threshold = form.success_threshold.data
+        preferences.name = form.name.data
+        preferences.failure_endpoint = form.failure_endpoint.data
 
-            user = User()
-            user.username = request.form["username"]
-            user.ifttt_secret = request.form["ifttt_secret"]
+        db_session.add(user)
+        db_session.add(device)
+        db_session.add(preferences)
+        db_session.commit()
 
-            device = Device()
-            device.identifier = request.form["device_id"]
-            device.failure_count = 0
+        profile_join = ProfileJoin()
+        profile_join.device_id = device.id
+        profile_join.user_id = user.id
+        profile_join.preference_id = preferences.id
+        profile_join.door_name = "Door 1"
 
-            preferences = NotificationPreferences()
-            preferences.expire_threshold = request.form["expire_threshold"]
-            preferences.failed_attempts_threshold = request.form["failed_attempts_threshold"]
-            preferences.remaining_use_threshold = request.form["remaining_use_threshold"]
-            preferences.send_no_earlier = request.form["send_no_earlier"]
-            preferences.send_no_later = request.form["send_no_later"]
-            preferences.success_threshold = request.form["success_threshold"]
-            preferences.name = request.form["name"]
-            preferences.failure_endpoint = request.form["failure_endpoint"]
-
-            db_session.add(user)
-            db_session.add(device)
-            db_session.add(preferences)
-            db_session.commit()
-
-            profile_join = ProfileJoin()
-            profile_join.device_id = device.id
-            profile_join.user_id = user.id
-            profile_join.preference_id = preferences.id
-            profile_join.door_name = "Door 1"
-
-            db_session.add(profile_join)
-            db_session.commit()
-            flash(user.username + ' successfully onboarded!', 'success')
-        else:
-            flash('Error: Not all fields were properly filled out', 'error')
+        db_session.add(profile_join)
+        db_session.commit()
+        flash(user.username + ' successfully onboarded!', 'success')
 
     return render_template('onboarding.html', form=form)
 
 
 @app.route('/patterns/', methods=['POST'])
 def patterns_post():
-    """
-    Handles the creation of new knock patterns for a user.
-    """
+    """Handles the creation of new knock patterns for a user."""
     data = request.get_json(force=True)  # Converts request body json into python dict
 
     pattern = AccessPattern()
@@ -113,7 +89,7 @@ def patterns_post():
     return jsonify(success=True)
 
 
-@app.route('/patterns/', methods = ['GET'])
+@app.route('/patterns/', methods=['GET'])
 def patterns_get():
     """
     Return all patterns for debugging
@@ -121,7 +97,7 @@ def patterns_get():
     """
     return jsonify(
         [pattern.serialize for pattern in
-         AccessPattern.query.order_by(AccessPattern.id.desc()).all()]
+            AccessPattern.query.order_by(AccessPattern.id.desc()).all()]
     )
 
 
@@ -191,10 +167,8 @@ def knock():
                 # Unlock the door
                 pattern.used_count += 1
                 db_session.commit()
-                pattern_success(pattern, "TestDevice1") #temp device id until implemented
+                pattern_success(pattern, "TestDevice1")  # temp device id until implemented
                 return jsonify(success=True)
 
-
-        send_failure_notification("TestDevice1") #temp device id until implemented
+        send_failure_notification("TestDevice1")  # temp device id until implemented
         return jsonify(success=False)
-
