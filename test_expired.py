@@ -34,7 +34,7 @@ class KnockServerTestCase(unittest.TestCase):
         stored_profile = models.ProfileJoin()
         stored_profile.device_id = 1
         stored_profile.pattern_id = 1
-        stored_profile.perference_id = 1
+        stored_profile.preference_id = 1
         stored_profile.user_id = 1
         stored_profile.door_name = "TestDoor1"
 

@@ -56,7 +56,7 @@ class ProfileJoin(Base):
     id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
     device_id = Column(Integer, ForeignKey('device.id')) # Can be null (if null will be associated with all patterns for the user)
     pattern_id = Column(Integer, ForeignKey('accesspattern.id')) # Can be null (if null will be associated with all patterns for the user)
-    perference_id = Column(Integer, ForeignKey('notificationpreferences.id'))
+    preference_id = Column(Integer, ForeignKey('notificationpreferences.id'))
     user_id = Column(Integer, ForeignKey('user.id'))
     door_name = Column(String)
 
