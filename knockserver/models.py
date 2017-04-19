@@ -20,7 +20,6 @@ class AccessPattern(Base):
     pattern_pieces = relationship("PatternPiece", backref="accesspattern")
     pending = Column(Boolean)
     used_count = Column(BigInteger)
-    user_id = Column(Integer, ForeignKey('user.id'))
 
     @property
     def serialize(self):
@@ -40,8 +39,8 @@ class PatternPiece(Base):
     pattern_id = Column(Integer, ForeignKey('accesspattern.id'))
     pressed = Column(Boolean)
 
-class NotifcationPreferences(Base):
-    __tablename__ = 'notifcationpreferences'
+class NotificationPreferences(Base):
+    __tablename__ = 'notificationpreferences'
     id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
     expire_threshold = Column(BigInteger) # Notification sent if there is less time remaining than this threshold in minutes
     failed_attempts_threshold = Column(BigInteger) # Notification sent if failures greater than this value
@@ -50,11 +49,20 @@ class NotifcationPreferences(Base):
     send_no_earlier = Column(BigInteger) # Minutes from previous midnight (midnight = 0, 01:00 = 60)
     send_no_later = Column(BigInteger) # Minutes from previous midnight (midnight = 0, 23:00 = 1380) and must be within one day
     success_threshold = Column(BigInteger) # If used_count % this == 0 send notification
+    failure_endpoint = Column(String)
 
-
-class NotifcationJoin(Base):
-    __tablename__ = 'notificationjoin'
+class ProfileJoin(Base):
+    __tablename__ = 'profilejoin'
     id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
+    device_id = Column(Integer, ForeignKey('device.id')) # Can be null (if null will be associated with all patterns for the user)
     pattern_id = Column(Integer, ForeignKey('accesspattern.id')) # Can be null (if null will be associated with all patterns for the user)
-    perference_id = Column(Integer, ForeignKey('notifcationpreferences.id'))
+    perference_id = Column(Integer, ForeignKey('notificationpreferences.id'))
     user_id = Column(Integer, ForeignKey('user.id'))
+    door_name = Column(String)
+
+class Device(Base):
+    __tablename__ = 'device'
+    id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
+    failure_count = Column(BigInteger)
+    identifier = Column(String)
+    name = Column(String)

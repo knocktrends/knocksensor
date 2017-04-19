@@ -1,6 +1,7 @@
 from flask import Flask, request, Response, render_template, jsonify, json
 
 from knockserver import app
+from knockserver.notifications import *
 from knockserver.database import db_session
 from knockserver.models import AccessPattern, PatternPiece
 from config import RECOGNITION_TOLERANCE
@@ -20,7 +21,7 @@ def patterns_post():
     data = request.get_json(force=True)  # Converts request body json into python dict
 
     pattern = AccessPattern()
-    
+
     # Fields from form
     try:
         pattern.name = data['name']
@@ -80,7 +81,7 @@ def knock():
             piece.length = data['pattern'][i]
             piece.order = i
             # First int is pressed time so all even indexed values are pressed
-            piece.pressed = i % 2 == 0 
+            piece.pressed = i % 2 == 0
 
             pending_pattern.pattern_pieces.append(piece)
 
@@ -126,6 +127,10 @@ def knock():
                 # Unlock the door
                 pattern.used_count += 1
                 db_session.commit()
+                pattern_success(pattern, "TestDevice1") #temp device id until implemented
                 return jsonify(success=True)
 
+
+        send_failure_notification("TestDevice1") #temp device id until implemented
         return jsonify(success=False)
+
