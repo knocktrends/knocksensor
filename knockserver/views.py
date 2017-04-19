@@ -1,7 +1,7 @@
 from flask import Flask, request, Response, render_template, jsonify, json, flash
 
 from knockserver import app
-from .forms import UserProfileForm
+from knockserver.forms import UserProfileForm
 from knockserver.notifications import *
 from knockserver.database import db_session
 from knockserver.models import AccessPattern, PatternPiece
