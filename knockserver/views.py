@@ -7,6 +7,7 @@ from knockserver.database import db_session
 from knockserver.models import *
 from config import RECOGNITION_TOLERANCE
 import time
+import ast
 
 
 @app.route('/')
@@ -116,7 +117,8 @@ def knock():
     If a knock is pending, this will set the pattern for the knock
     If no knocks are pending, this will attempt to match the pattern
     """
-    data = request.get_json(force=True)  # Converts request body json into python dict
+    pattern = ast.literal_eval(request.form["pattern"])
+    device_id = request.form["deviceId"]
 
     # Check for pending knock
     pending_pattern = AccessPattern.query.filter(AccessPattern.pending == True).first()
@@ -124,9 +126,9 @@ def knock():
     if pending_pattern is not None:
 
         # Convert int values from json array and store them as pattern_pieces
-        for i, json_val in enumerate(data['pattern']):
+        for i, json_val in enumerate(pattern):
             piece = PatternPiece()
-            piece.length = data['pattern'][i]
+            piece.length = pattern[i]
             piece.order = i
             # First int is pressed time so all even indexed values are pressed
             piece.pressed = i % 2 == 0
@@ -142,11 +144,8 @@ def knock():
         return jsonify(success=True)
 
     else:
-        if 'pattern' not in data:
-            return jsonify(success=False)
-
         # Grab the current pattern pieces
-        received_pattern_pieces = data['pattern']
+        received_pattern_pieces = pattern
 
         # Get the Profile
         profile = ProfileJoin.get_profile()
