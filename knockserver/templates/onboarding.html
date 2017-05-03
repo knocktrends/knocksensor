@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Onboarding with Knocktrends</title>
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='bower_components/jquery/dist/jquery.min.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='bower_components/moment/min/moment.min.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='bower_components/bootstrap/dist/css/bootstrap.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <h2>User Onboarding</h2>
+    <form action="" method="post" role="form">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group{% if form.username.errors %} has-error{% endif %}">
+            {{ form.username.label }}
+            {{ form.username(class="form-control", placeholder="What's your username?") }}
+            {% if form.username.errors %}
+                <ul class="text-danger">{% for error in form.username.errors %}
+                    <li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        <div class="form-group{% if form.device_id.errors %} has-error{% endif %}">
+            {{ form.device_id.label }}
+            {{ form.device_id(class="form-control", placeholder="B0:B4:48:C9:97:87") }}
+            {% if form.device_id.errors %}
+                <ul class="text-danger">{% for error in form.device_id.errors %}
+                    <li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        <div class="form-group{% if form.expire_threshold.errors %} has-error{% endif %}">
+            {{ form.expire_threshold.label }}
+            {{ form.expire_threshold(class="form-control", placeholder="1-999999") }}
+            {% if form.expire_threshold.errors %}
+                <ul class="text-danger">{% for error in form.expire_threshold.errors %}
+                    <li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        <div class="form-group{% if form.failed_attempts_threshold.errors %} has-error{% endif %}">
+            {{ form.failed_attempts_threshold.label }}
+            {{ form.failed_attempts_threshold(class="form-control", placeholder="1-999999") }}
+            {% if form.failed_attempts_threshold.errors %}
+                <ul class="text-danger">{% for error in form.failed_attempts_threshold.errors %}
+                    <li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        <div class="form-group{% if form.remaining_use_threshold.errors %} has-error{% endif %}">
+            {{ form.remaining_use_threshold.label }}
+            {{ form.remaining_use_threshold(class="form-control", placeholder="1-999999") }}
+            {% if form.remaining_use_threshold.errors %}
+                <ul class="text-danger">{% for error in form.remaining_use_threshold.errors %}
+                    <li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        <div class="form-group{% if form.send_no_earlier.errors %} has-error{% endif %}">
+            {{ form.send_no_earlier.label }}
+            {{ form.send_no_earlier(class="form-control", placeholder="100") }}
+            {% if form.send_no_earlier.errors %}
+                <ul class="text-danger">{% for error in form.send_no_earlier.errors %}
+                    <li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        <div class="form-group{% if form.send_no_later.errors %} has-error{% endif %}">
+            {{ form.send_no_later.label }}
+            {{ form.send_no_later(class="form-control", placeholder="100") }}
+            {% if form.send_no_later.errors %}
+                <ul class="text-danger">{% for error in form.send_no_later.errors %}
+                    <li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        <div class="form-group{% if form.success_threshold.errors %} has-error{% endif %}">
+            {{ form.success_threshold.label }}
+            {{ form.success_threshold(class="form-control", placeholder="1-999999") }}
+            {% if form.success_threshold.errors %}
+                <ul class="text-danger">{% for error in form.success_threshold.errors %}
+                    <li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        <div class="form-group{% if form.name.errors %} has-error{% endif %}">
+            {{ form.name.label }}
+            {{ form.name(class="form-control", placeholder="IFTTT Success Endpoint") }}
+            {% if form.name.errors %}
+                <ul class="text-danger">{% for error in form.name.errors %}
+                    <li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        <div class="form-group{% if form.failure_endpoint.errors %} has-error{% endif %}">
+            {{ form.failure_endpoint.label }}
+            {{ form.failure_endpoint(class="form-control", placeholder="IFTTT Failure Endpoint") }}
+            {% if form.failure_endpoint.errors %}
+                <ul class="text-danger">{% for error in form.failure_endpoint.errors %}
+                    <li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        <div class="form-group{% if form.ifttt_secret.errors %} has-error{% endif %}">
+            {{ form.ifttt_secret.label }}
+            {{ form.ifttt_secret(class="form-control", placeholder="IFTTT Secret") }}
+            {% if form.ifttt_secret.errors %}
+                <ul class="text-danger">{% for error in form.ifttt_secret.errors %}
+                    <li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+
+    <br>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+
+            {% for message in messages %}
+                {% if "Error" not in message[1] %}
+                    <div class="alert alert-info">
+                        <strong>Success! </strong> {{ message[1] }}
+                    </div>
+                {% endif %}
+
+                {% if "Error" in message[1] %}
+                    <div class="alert alert-warning">
+                        {{ message[1] }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+</div>
+</body>
+</html>
