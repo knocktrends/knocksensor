@@ -12,7 +12,7 @@ function send_status() {
         type: "POST",
         contentType: "application/json",
         dataType: 'json',
-        url: "http://127.0.0.1:5000/patterns/",
+        url: "/patterns/",
         data : JSON.stringify({name: "Test", expiration: date, maxUses: uses})
     });
 

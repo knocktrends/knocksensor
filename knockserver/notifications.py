@@ -34,6 +34,8 @@ def send_success_notification(access_pattern, device_identifier):
 
 def send_failure_notification(device_identifier):
     device = Device.query.filter(Device.identifier == device_identifier).first()
+    if device is None:
+        return
 
     for profile in ProfileJoin.query.filter(ProfileJoin.device_id == 1).all():
         user = User.query.filter(User.id == profile.user_id).first()
