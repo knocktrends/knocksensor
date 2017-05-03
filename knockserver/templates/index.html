@@ -13,10 +13,10 @@
 </head>
 
 <body>
-  <div class="container" style="width: 1000;" >
+  <div class="container" >
       <a href="{{ url_for('on_board_user') }}">Create a User Profile</a>
       <div class="row" id="row-1-input">
-        <div class='col-lg-4'>
+        <div class='col-sm-4'>
           <div class='input-group date' id='datetimepicker'>
             <input type='text' class="form-control" placeholder="Choose an expiration date"/>
             <span class="input-group-addon">
@@ -25,22 +25,22 @@
           </div>
         </div>
       </div>
-      <div class="row" style="width: 1000;">
-        <div class='col-lg-6'>
+      <div class="row" >
+        <div class='col-sm-6'>
           <div class="input-group">
             <input type='text' class="form-control" id="uses" placeholder="Number of times this pattern can be used"/>
           </div>
         </div>
       </div>
       <div class="row">
-        <div class='col-lg-6'>
+        <div class='col-sm-6'>
           <div class="input-group">
             <input type='text' class="form-control" id="door_name" placeholder="Name to identify the door this pattern unlocks."/>
           </div>
         </div>
       </div>
       <div class="row">
-       <div class='col-lg-6'>
+       <div class='col-sm-4'>
         <div class="button_box">
           <button class="btn btn-primary" onclick="send_status()">Record Knock Pattern</button>
         </div>
