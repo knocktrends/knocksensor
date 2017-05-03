@@ -13,7 +13,7 @@ function send_status() {
         contentType: "application/json",
         dataType: 'json',
         url: "/patterns/",
-        data : JSON.stringify({name: "Test", expiration: date, maxUses: uses})
+        data : JSON.stringify({name: door_name, door_name: door_name, expiration: date, maxUses: uses})
     });
 
     recording = true;
