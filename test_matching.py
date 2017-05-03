@@ -17,6 +17,7 @@ class KnockServerTestCase(unittest.TestCase):
         database.silent_remove_test_db()
 
     def test_empty_db_no_match(self):
+        KnockServerTestCase.env_setup()
         resp = self.app.post(
             '/knock/',
             data=json.dumps({"pattern": [123, 123, 123]}),
@@ -28,7 +29,6 @@ class KnockServerTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
 
     def test_perfect_match(self):
-
         KnockServerTestCase.env_setup()
 
         stored_pattern = models.AccessPattern()
@@ -90,9 +90,7 @@ class KnockServerTestCase(unittest.TestCase):
         pending_pattern = models.AccessPattern.query.filter(models.AccessPattern.pending == pending).first()
         self.assertIsNotNone(pending_pattern, "Pending pattern not found")
 
-        user = models.User.query.first()
-        profile = models.ProfileJoin.query.filter(models.ProfileJoin.user_id == user.id).first()
-        device = models.Device.query.filter(models.Device.id == profile.device_id).first()
+        device = models.Device.get_device()
 
         # Check the new pattern object
         self.assertEqual(pending_pattern.name, name, "Name is incorrect")
@@ -116,7 +114,6 @@ class KnockServerTestCase(unittest.TestCase):
     def env_setup():
         """
         Utilize this helper function to initialize all the user profile stuff for testing
-        :return:
         """
         stored_device = models.Device()
         stored_device.failure_count = 1

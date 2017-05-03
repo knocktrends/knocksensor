@@ -79,9 +79,7 @@ def patterns_post():
         pattern.max_uses = -1
     if 'device_id' in data:
         device_id = data['device_id']
-        user_id = User.query.first().id
-        profile = ProfileJoin.query.filter(User.id == user_id).first()
-        device = Device.query.filter(Device.id == profile.device_id).first()
+        device = Device.get_device()
         device.identifier = device_id
 
     # Fields that always are initialized to the same value
@@ -146,9 +144,19 @@ def knock():
         # Grab the current pattern pieces
         received_pattern_pieces = data['pattern']
 
+        # Get the Profile
+        profile = ProfileJoin.get_profile()
+
         # Filter out all expired knocks
         match_patterns = AccessPattern.query.filter(AccessPattern.expiration > time.time())
+
+        # Filter for all match patterns with the current device id
+        filtered_match_patterns = []
         for pattern in match_patterns:
+            if pattern.id == profile.pattern_id:
+                filtered_match_patterns.append(pattern)
+
+        for pattern in filtered_match_patterns:
 
             # Check to make sure number of pieces match
             if (len(received_pattern_pieces) != len(pattern.pattern_pieces)) or (len(pattern.pattern_pieces) <= 0):
