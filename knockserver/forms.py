@@ -27,7 +27,7 @@ class UserProfileForm(FlaskForm):
         'Device ID',
         validators=[
             validators.required(),
-            validators.length(min=14, max=14)
+            validators.length(min=17, max=17)
         ])
     expire_threshold = IntegerField(
         'Expire Threshold',
