@@ -1,4 +1,4 @@
-from flask import Flask, request, Response, render_template, jsonify, json, flash
+from flask import Flask, request, redirect, Response, render_template, jsonify, json, flash
 
 from knockserver import app
 from knockserver.forms import UserProfileForm
@@ -11,6 +11,10 @@ import time
 
 @app.route('/')
 def index():
+    user = User.query.first()
+    if not user:
+        return redirect('onboard')
+
     return render_template('index.html')
 
 
