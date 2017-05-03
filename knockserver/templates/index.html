@@ -1,45 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>KnockTrends</title>
-  <script type="text/javascript" src="../static/bower_components/jquery/dist/jquery.min.js"></script>
-  <script type="text/javascript" src="../static/bower_components/moment/min/moment.min.js"></script>
-  <script type="text/javascript" src="../static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="../static/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
-  <link rel="stylesheet" href="../static/bower_components/bootstrap/dist/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="../static/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <title>KnockTrends</title>
+    <script type="text/javascript" src="../static/bower_components/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="../static/bower_components/moment/min/moment.min.js"></script>
+    <script type="text/javascript" src="../static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript"
+            src="../static/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <link rel="stylesheet" href="../static/bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet"
+          href="../static/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
 
 <body>
-  <div class="container">
-      <a href="{{ url_for('on_board_user') }}">Create a User Profile</a>
-      <div class="row">
-        <div class='col-sm-4'>
-          <div class='input-group date' id='datetimepicker'>
-            <input type='text' class="form-control" placeholder="Choose an expiration date"/>
-            <span class="input-group-addon">
-              <span class="glyphicon glyphicon-calendar"></span>
-            </span>
-          </div>
+<div class="container">
+    <h2>User Onboarding</h2>
+    <a href="{{ url_for('on_board_user') }}">Create a User Profile</a>
+
+    <h2>Add a Knock Pattern</h2>
+    <form action="" method="post" role="form">
+        <div class="form-group">
+            <label for="datetimepicker">Expiration Date</label>
+            <div class='input-group date' id='datetimepicker'>
+                <input type='text' class="form-control" placeholder="Choose an expiration date"/>
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
         </div>
-      </div>
-      <div class="row">
-        <div class='col-sm-6'>
-          <div class="input-group">
-            <input type='text' class="form-control" id="uses" placeholder="Number of times this pattern can be used"/>
-          </div>
+        <div class="form-group">
+            <label for="uses">Number of times this pattern can be used</label>
+            <input type='text' class="form-control" id="uses"
+                   placeholder="Number of times this pattern can be used"/>
         </div>
-      </div>
-      <div class="row">
-       <div class='col-sm-4'>
         <div class="button_box">
-          <button class="btn btn-primary" onclick="send_status()">Record Knock Pattern</button>
+            <button class="btn btn-primary" onclick="send_status()">Record Knock Pattern</button>
         </div>
-      </div>
-    </div>
-  </div>
+    </form>
+</div>
 </body>
 
 </html>
