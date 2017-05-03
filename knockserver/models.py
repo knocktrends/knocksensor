@@ -10,6 +10,14 @@ class User(Base):
     salt = Column(String)
     username = Column(String)
 
+    @staticmethod
+    def get_user():
+        """
+        Get the first user object (the only allowed one)
+        :return: The user object
+        """
+        return User.query.first()
+
 class AccessPattern(Base):
     __tablename__ = 'accesspattern'
     id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
@@ -60,9 +68,25 @@ class ProfileJoin(Base):
     user_id = Column(Integer, ForeignKey('user.id'))
     door_name = Column(String)
 
+    @staticmethod
+    def get_profile():
+        """
+        Use this method to get a related profile
+        :return: The profile object
+        """
+        return ProfileJoin.query.filter(User.id == User.get_user().id).first()
+
 class Device(Base):
     __tablename__ = 'device'
     id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
     failure_count = Column(BigInteger)
     identifier = Column(String)
     name = Column(String)
+
+    @staticmethod
+    def get_device():
+        """
+        Use this method to get a related device
+        :return: The device object
+        """
+        return Device.query.filter(Device.id == ProfileJoin.get_profile().device_id).first()
