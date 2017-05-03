@@ -117,7 +117,6 @@ def knock():
     data = request.get_json(force=True)  # Converts request body json into python dict
 
     # Check for pending knock
-    user = User.query.first()
     pending_pattern = AccessPattern.query.filter(AccessPattern.pending == True).first()
 
     if pending_pattern is not None:
