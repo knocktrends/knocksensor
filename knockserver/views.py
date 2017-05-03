@@ -4,7 +4,7 @@ from knockserver import app
 from knockserver.forms import UserProfileForm
 from knockserver.notifications import *
 from knockserver.database import db_session
-from knockserver.models import AccessPattern, PatternPiece
+from knockserver.models import *
 from config import RECOGNITION_TOLERANCE
 import time
 
@@ -77,6 +77,12 @@ def patterns_post():
         pattern.max_uses = data['max_uses']
     else:
         pattern.max_uses = -1
+    if 'device_id' in data:
+        device_id = data['device_id']
+        user_id = User.query.first().id
+        profile = ProfileJoin.query.filter(User.id == user_id).first()
+        device = Device.query.filter(Device.id == profile.device_id).first()
+        device.identifier = device_id
 
     # Fields that always are initialized to the same value
     pattern.active = True
@@ -84,6 +90,8 @@ def patterns_post():
     pattern.pending = True
 
     db_session.add(pattern)
+    if device in locals():
+        db_session.add(device)
     db_session.commit()
 
     return jsonify(success=True)
@@ -111,6 +119,7 @@ def knock():
     data = request.get_json(force=True)  # Converts request body json into python dict
 
     # Check for pending knock
+    user = User.query.first()
     pending_pattern = AccessPattern.query.filter(AccessPattern.pending == True).first()
 
     if pending_pattern is not None:
