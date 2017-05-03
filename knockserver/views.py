@@ -90,8 +90,6 @@ def patterns_post():
     pattern.pending = True
 
     db_session.add(pattern)
-    if device in locals():
-        db_session.add(device)
     db_session.commit()
 
     return jsonify(success=True)
