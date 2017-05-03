@@ -86,6 +86,12 @@ def patterns_post():
         device = Device.get_device()
         device.identifier = device_id
 
+    if 'door_name' in data:
+        door_name = data['door_name']
+        profile = ProfileJoin.get_profile()
+        profile.door_name = door_name
+        db_session.add(profile)
+
     # Fields that always are initialized to the same value
     pattern.active = True
     pattern.used_count = 0
