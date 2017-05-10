@@ -16,7 +16,7 @@ def pattern_success(access_pattern, device_identifier):
 def send_unlock(access_pattern, device_identifier):
     device = Device.query.filter(Device.identifier == device_identifier).first()
     
-    for profile in ProfileJoin.query.filter(ProfileJoin.pattern_id == access_pattern.id).filter(ProfileJoin.device_id == 1).all():
+    for profile in ProfileJoin.query.filter(ProfileJoin.pattern_id == access_pattern.id).filter(ProfileJoin.device_id == device.id).all():
         
         for user in User.query.filter(User.id == profile.user_id).all():
             send_query(profile.door_name, user.ifttt_secret)
@@ -25,7 +25,7 @@ def send_success_notification(access_pattern, device_identifier):
     device = Device.query.filter(Device.identifier == device_identifier).first()
     params = {}
 
-    for profile in ProfileJoin.query.filter(ProfileJoin.device_id == 1).all():
+    for profile in ProfileJoin.query.filter(ProfileJoin.pattern_id == access_pattern.id).filter(ProfileJoin.device_id == device.id).all():
         user = User.query.filter(User.id == profile.user_id).first()
         
         for notification in NotificationPreferences.query.filter(NotificationPreferences.id == profile.preference_id).all():
@@ -37,7 +37,7 @@ def send_failure_notification(device_identifier):
     if device is None:
         return
 
-    for profile in ProfileJoin.query.filter(ProfileJoin.device_id == 1).all():
+    for profile in ProfileJoin.query.filter(ProfileJoin.device_id == device.id).all():
         user = User.query.filter(User.id == profile.user_id).first()
         
         for notification in NotificationPreferences.query.filter(NotificationPreferences.id == profile.preference_id).all():
